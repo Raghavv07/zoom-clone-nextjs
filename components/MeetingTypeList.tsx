@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import HomeCard from './HomeCard';
 import MeetingModal from './MeetingModal';
-import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useStreamVideoClient, type Call } from '@stream-io/video-react-sdk';
 import { useSession } from '@/lib/auth-client';
 import Loader from './Loader';
 import { Textarea } from './ui/textarea';

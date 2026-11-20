@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: 'A workspace for your team, powered by Stream and Better Auth.',
 };
 
+export const dynamic = 'force-dynamic';
+
 const RootLayout = ({ children }: Readonly<{children: ReactNode}>) => {
   return (
     <main className="relative">

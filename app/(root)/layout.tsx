@@ -1,11 +1,12 @@
 import { ReactNode } from 'react';
+import StreamVideoProviderWrapper from '@/providers/StreamClientProviderWrapper';
 
-import StreamVideoProvider from '@/providers/StreamClientProvider';
+export const dynamic = 'force-dynamic';
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main>
-      <StreamVideoProvider>{children}</StreamVideoProvider>
+      <StreamVideoProviderWrapper>{children}</StreamVideoProviderWrapper>
     </main>
   );
 };
