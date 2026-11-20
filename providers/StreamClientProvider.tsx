@@ -26,6 +26,26 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
     import('@stream-io/video-react-sdk').then(({ StreamVideoClient, StreamVideo }) => {
       if (!isMounted) return;
 
+      const fetchToken = async (): Promise<string> => {
+        try {
+          const res = await fetch('/api/stream-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user.id }),
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data?.token) return data.token;
+          }
+        } catch (fetchErr) {
+          console.warn('API token fetch failed, falling back to server action:', fetchErr);
+        }
+
+        // Fallback to server action
+        return await tokenProvider(user.id);
+      };
+
       client = new StreamVideoClient({
         apiKey: API_KEY,
         user: {
@@ -33,7 +53,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
           name: user.name || user.email || user.id,
           image: user.image || undefined,
         },
-        tokenProvider: () => tokenProvider(user.id),
+        tokenProvider: fetchToken,
       });
 
       setVideoClient(client);
