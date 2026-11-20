@@ -39,19 +39,33 @@ const PersonalRoom = () => {
   const { call } = useGetCallById(meetingId || "");
 
   const startRoom = async () => {
-    if (!client || !user || !meetingId) return;
-
-    const newCall = client.call("default", meetingId);
-
-    if (!call) {
-      await newCall.getOrCreate({
-        data: {
-          starts_at: new Date().toISOString(),
-        },
+    if (!client || !user || !meetingId) {
+      toast({
+        title: 'Connecting to video services...',
+        description: 'Please wait a moment and try again.',
       });
+      return;
     }
 
-    router.push(`/meeting/${meetingId}?personal=true`);
+    try {
+      const newCall = client.call("default", meetingId);
+
+      if (!call) {
+        await newCall.getOrCreate({
+          data: {
+            starts_at: new Date().toISOString(),
+          },
+        });
+      }
+
+      router.push(`/meeting/${meetingId}?personal=true`);
+    } catch (error: any) {
+      console.error('Failed to start personal room:', error);
+      toast({
+        title: 'Failed to start Meeting',
+        description: error?.message || 'Please check your connection and try again.',
+      });
+    }
   };
 
   const meetingLink = `${(typeof window !== 'undefined' ? window.location.origin : process.env.NEXT_PUBLIC_BASE_URL) || ''}/meeting/${meetingId}?personal=true`;

@@ -6,7 +6,7 @@ import { useSession } from '@/lib/auth-client';
 import { tokenProvider } from '@/actions/stream.actions';
 import Loader from '@/components/Loader';
 
-const API_KEY = process.env.NEXT_PUBLIC_STREAM_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_STREAM_API_KEY || 'h9ugy9qrd9zb';
 
 const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
   const [videoClient, setVideoClient] = useState<StreamVideoClientType>();
@@ -33,7 +33,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
           name: user.name || user.email || user.id,
           image: user.image || undefined,
         },
-        tokenProvider,
+        tokenProvider: () => tokenProvider(user.id),
       });
 
       setVideoClient(client);

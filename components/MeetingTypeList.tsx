@@ -33,7 +33,13 @@ const MeetingTypeList = () => {
   const { toast } = useToast();
 
   const createMeeting = async () => {
-    if (!client || !user) return;
+    if (!client || !user) {
+      toast({
+        title: 'Connecting to video services...',
+        description: 'Please wait a moment and try again.',
+      });
+      return;
+    }
     try {
       if (!values.dateTime) {
         toast({ title: 'Please select a date and time' });
@@ -41,7 +47,7 @@ const MeetingTypeList = () => {
       }
       const id = crypto.randomUUID();
       const call = client.call('default', id);
-      if (!call) throw new Error('Failed to create meeting');
+      if (!call) throw new Error('Failed to create meeting call object');
       const startsAt =
         values.dateTime.toISOString() || new Date(Date.now()).toISOString();
       const description = values.description || 'Instant Meeting';
@@ -60,9 +66,12 @@ const MeetingTypeList = () => {
       toast({
         title: 'Meeting Created',
       });
-    } catch (error) {
-      console.error(error);
-      toast({ title: 'Failed to create Meeting' });
+    } catch (error: any) {
+      console.error('Failed to create meeting:', error);
+      toast({
+        title: 'Failed to create Meeting',
+        description: error?.message || 'Please check your connection and try again.',
+      });
     }
   };
 
